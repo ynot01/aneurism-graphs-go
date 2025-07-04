@@ -38,10 +38,6 @@ jobs:
           chmod +x aneurism-graphs-go-linux-i386/aneurism-graphs-go.x86_32
           chmod +x aneurism-graphs-go-linux-arm64/aneurism-graphs-go.arm64
           chmod +x aneurism-graphs-go-linux-arm32/aneurism-graphs-go.arm32
-          cp webhook.txt aneurism-graphs-go-linux-amd64/webhook.txt
-          cp webhook.txt aneurism-graphs-go-linux-i386/webhook.txt
-          cp webhook.txt aneurism-graphs-go-linux-arm64/webhook.txt
-          cp webhook.txt aneurism-graphs-go-linux-arm32/webhook.txt
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -104,10 +100,6 @@ jobs:
           go build -o aneurism-graphs-go-windows-arm64/
           $Env:GOARCH="arm"
           go build -o aneurism-graphs-go-windows-arm32/
-          cp webhook.txt aneurism-graphs-go-windows-amd64/webhook.txt
-          cp webhook.txt aneurism-graphs-go-windows-i386/webhook.txt
-          cp webhook.txt aneurism-graphs-go-windows-arm64/webhook.txt
-          cp webhook.txt aneurism-graphs-go-windows-arm32/webhook.txt
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
