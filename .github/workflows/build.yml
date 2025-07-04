@@ -1,0 +1,151 @@
+name: "Compile & Upload"
+
+on:
+  release:
+    types: [created]
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: write
+  attestations: write
+
+jobs:
+  build-linux:
+    name: Build (Linux 🐧)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '^1.24.4'
+      - name: Build project
+        run: |
+          GOARCH=amd64 go build -o rot-tracker-webhook-linux-amd64/
+          GOARCH=386 go build -o rot-tracker-webhook-linux-i386/
+          GOARCH=arm64 go build -o rot-tracker-webhook-linux-arm64/
+          GOARCH=arm go build -o rot-tracker-webhook-linux-arm32/
+          mv rot-tracker-webhook-linux-amd64/rot-tracker-webhook rot-tracker-webhook-linux-amd64/rot-tracker-webhook.x86_64
+          mv rot-tracker-webhook-linux-i386/rot-tracker-webhook rot-tracker-webhook-linux-i386/rot-tracker-webhook.x86_32
+          mv rot-tracker-webhook-linux-arm64/rot-tracker-webhook rot-tracker-webhook-linux-arm64/rot-tracker-webhook.arm64
+          mv rot-tracker-webhook-linux-arm32/rot-tracker-webhook rot-tracker-webhook-linux-arm32/rot-tracker-webhook.arm32
+          chmod +x rot-tracker-webhook-linux-amd64/rot-tracker-webhook.x86_64
+          chmod +x rot-tracker-webhook-linux-i386/rot-tracker-webhook.x86_32
+          chmod +x rot-tracker-webhook-linux-arm64/rot-tracker-webhook.arm64
+          chmod +x rot-tracker-webhook-linux-arm32/rot-tracker-webhook.arm32
+          cp webhook.txt rot-tracker-webhook-linux-amd64/webhook.txt
+          cp webhook.txt rot-tracker-webhook-linux-i386/webhook.txt
+          cp webhook.txt rot-tracker-webhook-linux-arm64/webhook.txt
+          cp webhook.txt rot-tracker-webhook-linux-arm32/webhook.txt
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rot-tracker-webhook-linux-amd64
+          path: rot-tracker-webhook-linux-amd64/
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rot-tracker-webhook-linux-i386
+          path: rot-tracker-webhook-linux-i386/
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rot-tracker-webhook-linux-arm64
+          path: rot-tracker-webhook-linux-arm64/
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rot-tracker-webhook-linux-arm32
+          path: rot-tracker-webhook-linux-arm32/
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            rot-tracker-webhook-linux-amd64/
+            rot-tracker-webhook-linux-i386/
+            rot-tracker-webhook-linux-arm64/
+            rot-tracker-webhook-linux-arm32/
+      - name: Publish artifacts to GitHub release
+        if: github.ref_type == 'tag'
+        run: |
+          7z a rot-tracker-webhook-linux-amd64.zip ./rot-tracker-webhook-linux-amd64/
+          7z a rot-tracker-webhook-linux-i386.zip ./rot-tracker-webhook-linux-i386/
+          7z a rot-tracker-webhook-linux-arm64.zip ./rot-tracker-webhook-linux-arm64/
+          7z a rot-tracker-webhook-linux-arm32.zip ./rot-tracker-webhook-linux-arm32/
+          gh release upload ${{ github.event.release.tag_name }} rot-tracker-webhook-linux-amd64.zip
+          gh release upload ${{ github.event.release.tag_name }} rot-tracker-webhook-linux-i386.zip
+          gh release upload ${{ github.event.release.tag_name }} rot-tracker-webhook-linux-arm64.zip
+          gh release upload ${{ github.event.release.tag_name }} rot-tracker-webhook-linux-arm32.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build-windows:
+    name: Build (Windows 🪟)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '^1.24.4'
+      - name: Build project
+        run: |
+          $Env:GOARCH="amd64"
+          go build -o rot-tracker-webhook-windows-amd64/
+          $Env:GOARCH="386"
+          go build -o rot-tracker-webhook-windows-i386/
+          $Env:GOARCH="arm64"
+          go build -o rot-tracker-webhook-windows-arm64/
+          $Env:GOARCH="arm"
+          go build -o rot-tracker-webhook-windows-arm32/
+          cp webhook.txt rot-tracker-webhook-windows-amd64/webhook.txt
+          cp webhook.txt rot-tracker-webhook-windows-i386/webhook.txt
+          cp webhook.txt rot-tracker-webhook-windows-arm64/webhook.txt
+          cp webhook.txt rot-tracker-webhook-windows-arm32/webhook.txt
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rot-tracker-webhook-windows-amd64
+          path: rot-tracker-webhook-windows-amd64/
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rot-tracker-webhook-windows-i386
+          path: rot-tracker-webhook-windows-i386/
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rot-tracker-webhook-windows-arm64
+          path: rot-tracker-webhook-windows-arm64/
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rot-tracker-webhook-windows-arm32
+          path: rot-tracker-webhook-windows-arm32/
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            rot-tracker-webhook-windows-amd64/
+            rot-tracker-webhook-windows-i386/
+            rot-tracker-webhook-windows-arm64/
+            rot-tracker-webhook-windows-arm32/
+      - name: Publish artifacts to GitHub release
+        if: github.ref_type == 'tag'
+        run: |
+          7z a rot-tracker-webhook-windows-amd64.zip ./rot-tracker-webhook-windows-amd64/
+          7z a rot-tracker-webhook-windows-i386.zip ./rot-tracker-webhook-windows-i386/
+          7z a rot-tracker-webhook-windows-arm64.zip ./rot-tracker-webhook-windows-arm64/
+          7z a rot-tracker-webhook-windows-arm32.zip ./rot-tracker-webhook-windows-arm32/
+          gh release upload ${{ github.event.release.tag_name }} rot-tracker-webhook-windows-amd64.zip
+          gh release upload ${{ github.event.release.tag_name }} rot-tracker-webhook-windows-i386.zip
+          gh release upload ${{ github.event.release.tag_name }} rot-tracker-webhook-windows-arm64.zip
+          gh release upload ${{ github.event.release.tag_name }} rot-tracker-webhook-windows-arm32.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

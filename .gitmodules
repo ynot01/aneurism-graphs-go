@@ -1,0 +1,3 @@
+[submodule "aneurism-graphs"]
+	path = aneurism-graphs
+	url = https://github.com/ynot01/aneurism-graphs
