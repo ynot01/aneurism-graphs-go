@@ -3,3 +3,9 @@
 Backend for [ynot01/aneurism-graphs](https://github.com/ynot01/aneurism-graphs)
 
 Fetches data every 5 minutes and constructs data.ts, then publishes to surge.sh
+
+Expects aneurism-graphs to be as a subfolder `./aneurism-graphs/`
+
+`go build .`
+
+`go run .`
