@@ -167,8 +167,8 @@ func main_loop() {
 		}
 	}
 	{
-		dataTs := constructDataTs()   // git submodule update --recursive --remote
-		dataWriteErr := os.WriteFile( // git submodule foreach --recursive git reset --hard
+		dataTs := constructDataTs()
+		dataWriteErr := os.WriteFile(
 			"./aneurism-graphs/src/data.ts",
 			dataTs,
 			2,

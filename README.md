@@ -11,3 +11,7 @@ Expects aneurism-graphs to be as a subfolder `./aneurism-graphs/`
 `go run .`
 
 `setsid ./aneurism-graphs-go > ./tracker.log 2>&1 < /dev/null &`
+
+`git submodule foreach --recursive git reset --hard`
+
+`git submodule update --recursive --remote`
