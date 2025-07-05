@@ -310,6 +310,7 @@ func constructDataTs() []byte {
 import { ChartDataset } from 'chart.js/auto';
 
 export const servers = new Map<string, ChartDataset[]>;
+export const serverRots = new Map<string, number[]>;
 
 `)
 	lastUpdated := int64(0)
@@ -319,7 +320,14 @@ export const servers = new Map<string, ChartDataset[]>;
 	}
 	sort.Sort(Alphabetic(servers))
 	for _, v := range servers {
-		outBytes = fmt.Appendf(outBytes, `servers.set('%v',[{
+		outBytes = fmt.Appendf(outBytes, `serverRots.set('%v',[`, v.name)
+		for _, data := range v.data {
+			if data.rotted {
+				outBytes = fmt.Appendf(outBytes, "%v,\n", data.time_millis)
+			}
+		}
+		outBytes = fmt.Appendf(outBytes, `])
+		servers.set('%v',[{
             label: 'Players',
             data: [`, v.name)
 		for _, data := range v.data {
