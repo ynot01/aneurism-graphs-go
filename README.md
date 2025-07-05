@@ -9,3 +9,5 @@ Expects aneurism-graphs to be as a subfolder `./aneurism-graphs/`
 `go build .`
 
 `go run .`
+
+`setsid ./aneurism-graphs-go > ./tracker.log 2>&1 < /dev/null &`
