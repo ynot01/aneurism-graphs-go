@@ -133,12 +133,21 @@ func main_loop() {
 			udpClients[dictKey] = newClient
 		}
 		info, infoErr := client.QueryInfo()
+		oldServer, serverIsRegistered := registeredServers[dictKey]
 		if infoErr != nil {
-			// Don't print on server connection errors- a few of them are down a lot
-			// fmt.Printf("%v \"fail\"\n", ipAddr)
+			// Don't print on unregistered server connection errors- a few of them are down a lot
+			if serverIsRegistered {
+				fmt.Printf("[%v] Fail on existing %v - %v: %v\n", time.Now().Format(time.RFC850), oldServer.name, ipAddr, infoErr)
+				if oldServer.data[0].time_millis < (time.Now().UnixMilli() - 86400000) {
+					_, oldServer.data = oldServer.data, oldServer.data[1:]
+					registeredServers[dictKey] = oldServer
+				}
+				if len(oldServer.data) == 0 {
+					fmt.Printf("[%v] Pruned server %v - %v\n", time.Now().Format(time.RFC850), oldServer.name, ipAddr)
+					registeredServers[dictKey] = nil
+				}
+			}
 			continue
-		} else {
-			// fmt.Printf("%v \"success\"\n", ipAddr)
 		}
 		newDataPoint := new(dataPoint)
 		newDataPoint.time_millis = time.Now().UnixMilli()
@@ -146,7 +155,6 @@ func main_loop() {
 		newDataPoint.rot = get_rot_from_keywords(info.ExtendedServerInfo.Keywords)
 		newDataPoint.rotted = false
 		// Servers are stored by server port, not query port!
-		oldServer, serverIsRegistered := registeredServers[dictKey]
 		if serverIsRegistered {
 			if oldServer.name != fmt.Sprintf("%v %v - %v", get_region_from_keywords(info.ExtendedServerInfo.Keywords), info.Name, dictKey) {
 				// server rotted
@@ -154,7 +162,10 @@ func main_loop() {
 			}
 			oldServer.name = fmt.Sprintf("%v %v - %v", get_region_from_keywords(info.ExtendedServerInfo.Keywords), info.Name, dictKey)
 			oldServer.data = append(oldServer.data, newDataPoint)
-			if (len(oldServer.data) > 288) || (oldServer.data[0].time_millis < (time.Now().UnixMilli() - 86400000)) {
+			if len(oldServer.data) > 288 {
+				_, oldServer.data = oldServer.data, oldServer.data[1:]
+			}
+			if oldServer.data[0].time_millis < (time.Now().UnixMilli() - 86400000) {
 				_, oldServer.data = oldServer.data, oldServer.data[1:]
 			}
 			registeredServers[dictKey] = oldServer
