@@ -144,7 +144,7 @@ func main_loop() {
 				}
 				if len(oldServer.data) == 0 {
 					fmt.Printf("[%v] Pruned server %v - %v\n", time.Now().Format(time.RFC850), oldServer.name, ipAddr)
-					registeredServers[dictKey] = nil
+					delete(registeredServers, dictKey)
 				}
 			}
 			continue
