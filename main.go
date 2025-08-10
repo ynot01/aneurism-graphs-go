@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rumblefrog/go-a2s"
+	"github.com/ynot01/go-a2s"
 )
 
 const MASTER_URL = "https://content.aneurismiv.com/masterlist"
