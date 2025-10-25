@@ -16,6 +16,8 @@ Update aneurism-graphs submodule: `git submodule foreach --recursive git reset -
 
 Run in the background (still runs when tty exits): `setsid ./aneurism-graphs-go > ./tracker.log 2>&1 < /dev/null &`
 
+For GOOS and GOARCH options (for things like RISC-V), visit https://gist.github.com/asukakenji/f15ba7e588ac42795f421b48b8aede63
+
 ## Requirements
 
 [node and npm](https://nodejs.org/en/download) in your PATH, visit link for install instructions
