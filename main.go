@@ -91,6 +91,7 @@ func main() {
 }
 
 func main_loop() {
+	push_count := 0
 	official_servers := get_masterlist()
 	for official := range official_servers {
 		ipAddr := official_servers[official]
@@ -200,7 +201,8 @@ func main_loop() {
 			return
 		}
 	}
-	{
+	push_count++
+	if push_count%4 == 0 {
 		webPushCheck := exec.Command("surge", "./aneurism-graphs/site/", "a4tracker.surge.sh")
 		errBuilder := new(strings.Builder)
 		webPushCheck.Stderr = errBuilder
