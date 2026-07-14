@@ -91,7 +91,7 @@ func main() {
 }
 
 func main_loop() {
-	push_count := 0
+	var push_count uint64 = 0
 	official_servers := get_masterlist()
 	for official := range official_servers {
 		ipAddr := official_servers[official]
