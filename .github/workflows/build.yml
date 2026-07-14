@@ -29,15 +29,12 @@ jobs:
           GOARCH=amd64 go build -o aneurism-graphs-go-linux-amd64/
           GOARCH=386 go build -o aneurism-graphs-go-linux-i386/
           GOARCH=arm64 go build -o aneurism-graphs-go-linux-arm64/
-          GOARCH=arm go build -o aneurism-graphs-go-linux-arm32/
           mv aneurism-graphs-go-linux-amd64/aneurism-graphs-go aneurism-graphs-go-linux-amd64/aneurism-graphs-go.x86_64
           mv aneurism-graphs-go-linux-i386/aneurism-graphs-go aneurism-graphs-go-linux-i386/aneurism-graphs-go.x86_32
           mv aneurism-graphs-go-linux-arm64/aneurism-graphs-go aneurism-graphs-go-linux-arm64/aneurism-graphs-go.arm64
-          mv aneurism-graphs-go-linux-arm32/aneurism-graphs-go aneurism-graphs-go-linux-arm32/aneurism-graphs-go.arm32
           chmod +x aneurism-graphs-go-linux-amd64/aneurism-graphs-go.x86_64
           chmod +x aneurism-graphs-go-linux-i386/aneurism-graphs-go.x86_32
           chmod +x aneurism-graphs-go-linux-arm64/aneurism-graphs-go.arm64
-          chmod +x aneurism-graphs-go-linux-arm32/aneurism-graphs-go.arm32
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -53,11 +50,6 @@ jobs:
         with:
           name: aneurism-graphs-go-linux-arm64
           path: aneurism-graphs-go-linux-arm64/
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: aneurism-graphs-go-linux-arm32
-          path: aneurism-graphs-go-linux-arm32/
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
         with:
@@ -65,18 +57,15 @@ jobs:
             aneurism-graphs-go-linux-amd64/
             aneurism-graphs-go-linux-i386/
             aneurism-graphs-go-linux-arm64/
-            aneurism-graphs-go-linux-arm32/
       - name: Publish artifacts to GitHub release
         if: github.ref_type == 'tag'
         run: |
           7z a aneurism-graphs-go-linux-amd64.zip ./aneurism-graphs-go-linux-amd64/
           7z a aneurism-graphs-go-linux-i386.zip ./aneurism-graphs-go-linux-i386/
           7z a aneurism-graphs-go-linux-arm64.zip ./aneurism-graphs-go-linux-arm64/
-          7z a aneurism-graphs-go-linux-arm32.zip ./aneurism-graphs-go-linux-arm32/
           gh release upload ${{ github.event.release.tag_name }} aneurism-graphs-go-linux-amd64.zip
           gh release upload ${{ github.event.release.tag_name }} aneurism-graphs-go-linux-i386.zip
           gh release upload ${{ github.event.release.tag_name }} aneurism-graphs-go-linux-arm64.zip
-          gh release upload ${{ github.event.release.tag_name }} aneurism-graphs-go-linux-arm32.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build-windows:
@@ -98,8 +87,6 @@ jobs:
           go build -o aneurism-graphs-go-windows-i386/
           $Env:GOARCH="arm64"
           go build -o aneurism-graphs-go-windows-arm64/
-          $Env:GOARCH="arm"
-          go build -o aneurism-graphs-go-windows-arm32/
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
@@ -115,11 +102,6 @@ jobs:
         with:
           name: aneurism-graphs-go-windows-arm64
           path: aneurism-graphs-go-windows-arm64/
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: aneurism-graphs-go-windows-arm32
-          path: aneurism-graphs-go-windows-arm32/
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
         with:
@@ -127,17 +109,14 @@ jobs:
             aneurism-graphs-go-windows-amd64/
             aneurism-graphs-go-windows-i386/
             aneurism-graphs-go-windows-arm64/
-            aneurism-graphs-go-windows-arm32/
       - name: Publish artifacts to GitHub release
         if: github.ref_type == 'tag'
         run: |
           7z a aneurism-graphs-go-windows-amd64.zip ./aneurism-graphs-go-windows-amd64/
           7z a aneurism-graphs-go-windows-i386.zip ./aneurism-graphs-go-windows-i386/
           7z a aneurism-graphs-go-windows-arm64.zip ./aneurism-graphs-go-windows-arm64/
-          7z a aneurism-graphs-go-windows-arm32.zip ./aneurism-graphs-go-windows-arm32/
           gh release upload ${{ github.event.release.tag_name }} aneurism-graphs-go-windows-amd64.zip
           gh release upload ${{ github.event.release.tag_name }} aneurism-graphs-go-windows-i386.zip
           gh release upload ${{ github.event.release.tag_name }} aneurism-graphs-go-windows-arm64.zip
-          gh release upload ${{ github.event.release.tag_name }} aneurism-graphs-go-windows-arm32.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
