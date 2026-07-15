@@ -18,10 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           lfs: true
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: '^1.24.4'
       - name: Build project
@@ -36,22 +36,22 @@ jobs:
           chmod +x aneurism-graphs-go-linux-i386/aneurism-graphs-go.x86_32
           chmod +x aneurism-graphs-go-linux-arm64/aneurism-graphs-go.arm64
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: aneurism-graphs-go-linux-amd64
           path: aneurism-graphs-go-linux-amd64/
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: aneurism-graphs-go-linux-i386
           path: aneurism-graphs-go-linux-i386/
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: aneurism-graphs-go-linux-arm64
           path: aneurism-graphs-go-linux-arm64/
       - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest@v4
         with:
           subject-path: |
             aneurism-graphs-go-linux-amd64/
@@ -73,10 +73,10 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           lfs: true
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v6
         with:
           go-version: '^1.24.4'
       - name: Build project
@@ -88,22 +88,22 @@ jobs:
           $Env:GOARCH="arm64"
           go build -o aneurism-graphs-go-windows-arm64/
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: aneurism-graphs-go-windows-amd64
           path: aneurism-graphs-go-windows-amd64/
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: aneurism-graphs-go-windows-i386
           path: aneurism-graphs-go-windows-i386/
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: aneurism-graphs-go-windows-arm64
           path: aneurism-graphs-go-windows-arm64/
       - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest@v4
         with:
           subject-path: |
             aneurism-graphs-go-windows-amd64/
