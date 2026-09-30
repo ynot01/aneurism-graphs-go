@@ -78,8 +78,8 @@ func main() {
 			fmt.Printf("[%v] surgeCheckErr: %v\n", time.Now().Format(time.RFC850), surgeCheckErr)
 			return
 		}
-		if !strings.Contains(string(output), "Student") {
-			fmt.Printf("[%v] Surge output does not contain \"Student\": %v\n", time.Now().Format(time.RFC850), string(output))
+		if !strings.Contains(string(output), "Free") {
+			fmt.Printf("[%v] Surge output does not contain \"Free\": %v\n", time.Now().Format(time.RFC850), string(output))
 			return
 		}
 	}
